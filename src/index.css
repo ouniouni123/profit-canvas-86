@@ -53,6 +53,10 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --warning: 45 93% 47%;
+    --warning-foreground: 33 100% 10%;
+    --warning-muted: 48 96% 89%;
   }
 
   .dark {
