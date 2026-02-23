@@ -1,4 +1,4 @@
-import { LayoutDashboard, Upload, FileText, User } from "lucide-react";
+import { LayoutDashboard, Upload, FileText, User, BookOpen, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -12,14 +12,18 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navigationItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Data Wizard", url: "/upload", icon: Upload },
   { title: "Executive Reports", url: "/reports", icon: FileText },
+  { title: "Data Guide", url: "/data-guide", icon: BookOpen },
 ];
 
 export function AppSidebar() {
+  const { user, logout } = useAuth();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -57,10 +61,20 @@ export function AppSidebar() {
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-medium text-sidebar-foreground">Alex Morgan</span>
-            <span className="text-xs text-muted-foreground">Finance Analyst</span>
+            <span className="text-sm font-medium text-sidebar-foreground">
+              {user?.name ?? "Guest"}
+            </span>
+            <span className="text-xs text-muted-foreground">{user?.email ?? ""}</span>
           </div>
         </div>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={logout} tooltip="Log out">
+              <LogOut className="h-4 w-4" />
+              <span>Log out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
