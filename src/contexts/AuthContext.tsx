@@ -5,28 +5,63 @@ interface User {
   name: string;
 }
 
+interface StoredUser extends User {
+  password: string;
+}
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => void;
-  signup: (email: string, password: string, name: string) => void;
+  login: (email: string, password: string) => string | null;
+  signup: (email: string, password: string, name: string) => string | null;
   logout: () => void;
+}
+
+const USERS_KEY = "profitview_users";
+const SESSION_KEY = "profitview_session";
+
+function getStoredUsers(): StoredUser[] {
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+  } catch { return []; }
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const s = localStorage.getItem(SESSION_KEY);
+      return s ? JSON.parse(s) : null;
+    } catch { return null; }
+  });
 
-  const login = (email: string, _password: string) => {
-    setUser({ email, name: email.split("@")[0] });
+  const login = (email: string, password: string): string | null => {
+    const users = getStoredUsers();
+    const found = users.find((u) => u.email === email);
+    if (!found) return "No account found with this email.";
+    if (found.password !== password) return "Incorrect password.";
+    const session = { email: found.email, name: found.name };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    setUser(session);
+    return null;
   };
 
-  const signup = (email: string, _password: string, name: string) => {
-    setUser({ email, name });
+  const signup = (email: string, password: string, name: string): string | null => {
+    const users = getStoredUsers();
+    if (users.some((u) => u.email === email)) return "An account with this email already exists.";
+    users.push({ email, password, name });
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    const session = { email, name };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    setUser(session);
+    return null;
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    localStorage.removeItem(SESSION_KEY);
+    setUser(null);
+  };
 
   return (
     <AuthContext.Provider

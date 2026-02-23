@@ -12,10 +12,13 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    isSignUp ? signup(email, password, name) : login(email, password);
+    setError("");
+    const err = isSignUp ? signup(email, password, name) : login(email, password);
+    if (err) setError(err);
   };
 
   return (
@@ -33,6 +36,7 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <p className="text-sm text-destructive text-center">{error}</p>}
             {isSignUp && (
               <div className="space-y-1.5">
                 <Label htmlFor="name">Name</Label>
