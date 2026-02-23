@@ -22,13 +22,7 @@ export function MetricCard({ title, value, icon: Icon, sparklineData, sparklineC
         <div className="mt-2 h-10">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={sparklineData}>
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke={sparklineColor}
-                strokeWidth={2}
-                dot={false}
-              />
+              <Line type="monotone" dataKey="value" stroke={sparklineColor} strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>

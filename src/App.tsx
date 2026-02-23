@@ -6,10 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AppLayout } from "@/components/AppLayout";
-import Dashboard from "@/pages/Dashboard";
-import DataWizard from "@/pages/DataWizard";
-import ExecutiveReports from "@/pages/ExecutiveReports";
-import DataGuide from "@/pages/DataGuide";
+import CommandCenter from "@/pages/CommandCenter";
+import ExecutiveArchive from "@/pages/ExecutiveArchive";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
 
@@ -24,17 +22,9 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/upload" element={<DataWizard />} />
-              <Route path="/reports" element={<ExecutiveReports />} />
-              <Route path="/data-guide" element={<DataGuide />} />
+            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              <Route path="/" element={<CommandCenter />} />
+              <Route path="/reports" element={<ExecutiveArchive />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

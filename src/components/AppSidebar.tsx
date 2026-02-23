@@ -1,24 +1,22 @@
-import { LayoutDashboard, Upload, FileText, User, BookOpen, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut, BarChart3, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { DataGuideModal } from "@/components/DataGuideModal";
 import { useAuth } from "@/contexts/AuthContext";
 
-const navigationItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Data Wizard", url: "/upload", icon: Upload },
-  { title: "Executive Reports", url: "/reports", icon: FileText },
-  { title: "Data Guide", url: "/data-guide", icon: BookOpen },
+const navItems = [
+  { title: "Command Center", url: "/", icon: LayoutDashboard },
+  { title: "Executive Archive", url: "/reports", icon: FileText },
 ];
 
 export function AppSidebar() {
@@ -28,12 +26,15 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider">
-            ProfitView
-          </SidebarGroupLabel>
+          <div className="flex items-center gap-2 px-3 py-4 group-data-[collapsible=icon]:justify-center">
+            <BarChart3 className="h-5 w-5 text-primary shrink-0" />
+            <span className="text-sm font-bold text-primary group-data-[collapsible=icon]:hidden">
+              ProfitView
+            </span>
+          </div>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => (
+              {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <NavLink
@@ -61,10 +62,11 @@ export function AppSidebar() {
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-medium text-sidebar-foreground">
-              {user?.name ?? "Guest"}
-            </span>
+            <span className="text-sm font-medium">{user?.name ?? "Guest"}</span>
             <span className="text-xs text-muted-foreground">{user?.email ?? ""}</span>
+          </div>
+          <div className="ml-auto group-data-[collapsible=icon]:hidden">
+            <DataGuideModal />
           </div>
         </div>
         <SidebarMenu>
