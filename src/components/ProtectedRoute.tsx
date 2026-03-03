@@ -1,9 +1,20 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, AppRole } from "@/contexts/AuthContext";
 import { ReactNode } from "react";
 
-export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
+interface Props {
+  children: ReactNode;
+  allowedRoles?: AppRole[];
+}
+
+export function ProtectedRoute({ children, allowedRoles }: Props) {
+  const { isAuthenticated, user } = useAuth();
+
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/forbidden" replace />;
+  }
+
   return <>{children}</>;
 }

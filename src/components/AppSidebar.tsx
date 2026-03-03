@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, LogOut, BarChart3, User } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut, BarChart3, User, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -13,14 +13,21 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DataGuideModal } from "@/components/DataGuideModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { Badge } from "@/components/ui/badge";
 
-const navItems = [
+const sharedItems = [
   { title: "Command Center", url: "/", icon: LayoutDashboard },
   { title: "Executive Archive", url: "/reports", icon: FileText },
 ];
 
+const adminItems = [
+  { title: "Admin Dashboard", url: "/admin", icon: Shield },
+];
+
 export function AppSidebar() {
   const { user, logout } = useAuth();
+  const isAdmin = user?.role === "admin";
+  const navItems = isAdmin ? [...sharedItems, ...adminItems] : sharedItems;
 
   return (
     <Sidebar collapsible="icon">
@@ -62,7 +69,12 @@ export function AppSidebar() {
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-medium">{user?.name ?? "Guest"}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">{user?.name ?? "Guest"}</span>
+              <Badge variant={isAdmin ? "default" : "secondary"} className="text-[10px] px-1.5 py-0">
+                {user?.role ?? "user"}
+              </Badge>
+            </div>
             <span className="text-xs text-muted-foreground">{user?.email ?? ""}</span>
           </div>
           <div className="ml-auto group-data-[collapsible=icon]:hidden">
