@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, AppRole } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart3, Mail, Lock, User } from "lucide-react";
 
 export default function Login() {
@@ -12,12 +13,13 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<AppRole>("user");
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const err = isSignUp ? signup(email, password, name) : login(email, password);
+    const err = isSignUp ? signup(email, password, name, role) : login(email, password);
     if (err) setError(err);
   };
 
@@ -38,13 +40,27 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && <p className="text-sm text-destructive text-center">{error}</p>}
             {isSignUp && (
-              <div className="space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="name" placeholder="Alex Morgan" value={name} onChange={(e) => setName(e.target.value)} className="pl-10" required />
+              <>
+                <div className="space-y-1.5">
+                  <Label htmlFor="name">Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input id="name" placeholder="Alex Morgan" value={name} onChange={(e) => setName(e.target.value)} className="pl-10" required />
+                  </div>
                 </div>
-              </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="role">Role</Label>
+                  <Select value={role} onValueChange={(v) => setRole(v as AppRole)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
             )}
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
