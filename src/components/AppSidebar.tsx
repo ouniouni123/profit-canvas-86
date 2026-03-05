@@ -11,13 +11,16 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { DataGuideModal } from "@/components/DataGuideModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 
 const sharedItems = [
   { title: "Command Center", url: "/", icon: LayoutDashboard },
   { title: "Executive Archive", url: "/reports", icon: FileText },
+];
+
+const userItems = [
+  { title: "My Analysis", url: "/analysis", icon: BarChart3 },
 ];
 
 const adminItems = [
@@ -27,14 +30,14 @@ const adminItems = [
 export function AppSidebar() {
   const { user, logout } = useAuth();
   const isAdmin = user?.role === "admin";
-  const navItems = isAdmin ? [...sharedItems, ...adminItems] : sharedItems;
+  const navItems = isAdmin ? [...sharedItems, ...adminItems] : [...sharedItems, ...userItems];
 
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <div className="flex items-center gap-2 px-3 py-4 group-data-[collapsible=icon]:justify-center">
-            <BarChart3 className="h-5 w-5 text-primary shrink-0" />
+            <BarChart3 className="h-5 w-5 shrink-0 text-primary" />
             <span className="text-sm font-bold text-primary group-data-[collapsible=icon]:hidden">
               ProfitView
             </span>
@@ -48,7 +51,7 @@ export function AppSidebar() {
                       to={item.url}
                       end={item.url === "/"}
                       className="hover:bg-sidebar-accent"
-                      activeClassName="bg-sidebar-accent text-sidebar-primary font-medium"
+                      activeClassName="bg-sidebar-accent font-medium text-sidebar-primary"
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
@@ -64,21 +67,18 @@ export function AppSidebar() {
       <SidebarFooter>
         <div className="flex items-center gap-3 px-2 py-3">
           <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+            <AvatarFallback className="bg-primary text-xs text-primary-foreground">
               <User className="h-4 w-4" />
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">{user?.name ?? "Guest"}</span>
-              <Badge variant={isAdmin ? "default" : "secondary"} className="text-[10px] px-1.5 py-0">
+              <Badge variant={isAdmin ? "default" : "secondary"} className="px-1.5 py-0 text-[10px]">
                 {user?.role ?? "user"}
               </Badge>
             </div>
             <span className="text-xs text-muted-foreground">{user?.email ?? ""}</span>
-          </div>
-          <div className="ml-auto group-data-[collapsible=icon]:hidden">
-            <DataGuideModal />
           </div>
         </div>
         <SidebarMenu>
@@ -93,3 +93,4 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
+
