@@ -9,6 +9,7 @@ import { AppLayout } from "@/components/AppLayout";
 import CommandCenter from "@/pages/CommandCenter";
 import ExecutiveArchive from "@/pages/ExecutiveArchive";
 import AdminDashboard from "@/pages/AdminDashboard";
+import UserAnalysisDashboard from "@/pages/UserAnalysisDashboard";
 import Login from "@/pages/Login";
 import Forbidden from "@/pages/Forbidden";
 import NotFound from "@/pages/NotFound";
@@ -29,6 +30,14 @@ const App = () => (
               <Route path="/" element={<CommandCenter />} />
               <Route path="/reports" element={<ExecutiveArchive />} />
               <Route
+                path="/analysis"
+                element={
+                  <ProtectedRoute allowedRoles={["user"]}>
+                    <UserAnalysisDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin"
                 element={
                   <ProtectedRoute allowedRoles={["admin"]}>
@@ -46,3 +55,4 @@ const App = () => (
 );
 
 export default App;
+
